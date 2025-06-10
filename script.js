@@ -526,5 +526,61 @@ document.addEventListener('DOMContentLoaded', function() {
     
     createFloatingParticles();
 
+    // Dark mode functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    
+    // Update icon based on current theme
+    if (currentTheme === 'dark') {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
+    // Theme toggle functionality
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Update theme
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update icon with animation
+        themeIcon.style.transform = 'rotate(180deg)';
+        
+        setTimeout(() => {
+            if (newTheme === 'dark') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+            themeIcon.style.transform = 'rotate(0deg)';
+        }, 150);
+        
+        // Add a subtle animation to the body
+        document.body.style.transition = 'background-color 0.5s ease, color 0.5s ease';
+    });
+
+    // Update navbar background on scroll to match theme
+    window.addEventListener('scroll', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (window.scrollY > 100) {
+            navbar.style.background = currentTheme === 'dark' ? 
+                'rgba(18, 18, 18, 0.98)' : 'rgba(250, 250, 250, 0.98)';
+            navbar.style.boxShadow = currentTheme === 'dark' ? 
+                '0 2px 20px rgba(0, 0, 0, 0.3)' : '0 2px 20px rgba(1, 117, 194, 0.1)';
+        } else {
+            navbar.style.background = currentTheme === 'dark' ? 
+                'rgba(18, 18, 18, 0.95)' : 'rgba(250, 250, 250, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
+    });
+
     console.log('Portfolio loaded successfully! 🚀');
 });
