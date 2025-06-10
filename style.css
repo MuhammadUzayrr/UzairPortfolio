@@ -198,6 +198,25 @@ p {
     align-items: center;
     padding: 120px 0 80px;
     background: linear-gradient(135deg, var(--background-color) 0%, rgba(19, 185, 253, 0.05) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230175C2' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: backgroundMove 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes backgroundMove {
+    0% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(-60px) translateY(-60px); }
 }
 
 .hero-content {
@@ -216,6 +235,30 @@ p {
 .highlight {
     color: var(--primary-color);
     position: relative;
+    display: inline-block;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
+    animation: slideIn 1s ease-out 2s both;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px rgba(1, 117, 194, 0.3); }
+    to { text-shadow: 0 0 20px rgba(1, 117, 194, 0.6), 0 0 30px rgba(19, 185, 253, 0.4); }
+}
+
+@keyframes slideIn {
+    from { width: 0; }
+    to { width: 100%; }
 }
 
 .hero-subtitle {
@@ -286,17 +329,50 @@ p {
 .flutter-logo {
     font-size: 8rem;
     color: var(--white);
-    animation: float 3s ease-in-out infinite;
+    animation: float 3s ease-in-out infinite, pulse 4s ease-in-out infinite;
+    transition: var(--transition);
+}
+
+.flutter-logo:hover {
+    animation: spin 1s ease-in-out, float 3s ease-in-out infinite, pulse 4s ease-in-out infinite;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* Section Styles */
 section {
     padding: 80px 0;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+section:nth-child(even) {
+    animation-delay: 0.2s;
+}
+
+section:nth-child(odd) {
+    animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .section-title {

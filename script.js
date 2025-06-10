@@ -88,34 +88,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     // Elements to animate on scroll
-    const animateElements = document.querySelectorAll('.skill-category, .project-card, .timeline-item, .cert-item, .contact-item');
+    const animateElements = document.querySelectorAll('.skill-category, .project-card, .timeline-item, .cert-item, .contact-item, .hero-text, .hero-image');
     
-    animateElements.forEach(element => {
+    animateElements.forEach((element, index) => {
         element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = `opacity 0.8s ease ${index * 0.1}s, transform 0.8s ease ${index * 0.1}s`;
         observer.observe(element);
     });
 
     // Typing animation for hero title
     const heroTitle = document.querySelector('.hero-title');
-    const titleText = heroTitle.innerHTML;
+    const titleText = 'Hi, I\'m Muhammad Uzair';
+    const highlightText = 'Muhammad Uzair';
     
     function typeWriter() {
         heroTitle.innerHTML = '';
         let i = 0;
-        const speed = 50;
+        const speed = 80;
         
         function type() {
             if (i < titleText.length) {
-                heroTitle.innerHTML += titleText.charAt(i);
+                const currentText = titleText.substring(0, i + 1);
+                
+                // Check if we're at the highlight part
+                if (currentText.includes('Muhammad Uzair')) {
+                    const beforeHighlight = 'Hi, I\'m ';
+                    const highlightPart = currentText.substring(beforeHighlight.length);
+                    heroTitle.innerHTML = beforeHighlight + '<span class="highlight">' + highlightPart + '</span>';
+                } else {
+                    heroTitle.innerHTML = currentText;
+                }
+                
                 i++;
                 setTimeout(type, speed);
             }
         }
         
         // Start typing animation after a short delay
-        setTimeout(type, 500);
+        setTimeout(type, 800);
     }
 
     // Start typing animation when page loads
@@ -369,6 +380,151 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Swiped right');
         }
     }
+
+    // Stats counter animation
+    const stats = document.querySelectorAll('.stat h3');
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const finalValue = parseInt(target.textContent);
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 30);
+                
+                const counter = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        target.textContent = finalValue + '+';
+                        clearInterval(counter);
+                    } else {
+                        target.textContent = currentValue + '+';
+                    }
+                }, 80);
+                
+                statsObserver.unobserve(target);
+            }
+        });
+    });
+    
+    stats.forEach(stat => statsObserver.observe(stat));
+
+    // Enhanced skill items animation
+    const skillItemsAdvanced = document.querySelectorAll('.skill-item');
+    const skillCategories = document.querySelectorAll('.skill-category');
+    const skillObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const skillItems = entry.target.querySelectorAll('.skill-item');
+                skillItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateX(0)';
+                    }, index * 150);
+                });
+            }
+        });
+    });
+
+    skillCategories.forEach(category => {
+        const skillItems = category.querySelectorAll('.skill-item');
+        skillItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-30px)';
+            item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        });
+        skillObserver.observe(category);
+    });
+
+    // Enhanced project card animations
+    const projectCardsAdvanced = document.querySelectorAll('.project-card');
+    projectCardsAdvanced.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+            this.style.boxShadow = '0 20px 40px rgba(1, 117, 194, 0.15)';
+            
+            // Add subtle rotation to project icon
+            const icon = this.querySelector('.project-icon');
+            if (icon) {
+                icon.style.transform = 'rotate(10deg) scale(1.1)';
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 4px 20px rgba(1, 117, 194, 0.1)';
+            
+            const icon = this.querySelector('.project-icon');
+            if (icon) {
+                icon.style.transform = 'rotate(0deg) scale(1)';
+            }
+        });
+    });
+
+    // Typing animation for hero subtitle
+    setTimeout(() => {
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        const subtitleText = 'Flutter Developer & Mobile App Specialist';
+        heroSubtitle.innerHTML = '';
+        
+        let j = 0;
+        function typeSubtitle() {
+            if (j < subtitleText.length) {
+                heroSubtitle.innerHTML += subtitleText.charAt(j);
+                j++;
+                setTimeout(typeSubtitle, 50);
+            }
+        }
+        typeSubtitle();
+    }, 3000);
+
+    // Add floating particles animation
+    function createFloatingParticles() {
+        const heroSection = document.querySelector('.hero');
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 6 + 2}px;
+                height: ${Math.random() * 6 + 2}px;
+                background-color: rgba(1, 117, 194, 0.3);
+                border-radius: 50%;
+                top: ${Math.random() * 100}%;
+                left: ${Math.random() * 100}%;
+                animation: float-particle ${Math.random() * 10 + 10}s infinite linear;
+                z-index: 1;
+            `;
+            heroSection.appendChild(particle);
+        }
+    }
+
+    // Add CSS for floating particles
+    const particleStyle = document.createElement('style');
+    particleStyle.textContent = `
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .project-icon {
+            transition: transform 0.3s ease;
+        }
+    `;
+    document.head.appendChild(particleStyle);
+    
+    createFloatingParticles();
 
     console.log('Portfolio loaded successfully! 🚀');
 });
